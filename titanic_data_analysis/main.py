@@ -92,3 +92,37 @@ if MAIN:
     out_classes = np.argmax(out_probs, axis=1)
     print('Test Accuracy: {:.2f}'.format(np.mean(out_classes == test_labels)))
 # %%
+if MAIN:
+    ig = IntegratedGradients(net)
+    test_input_tensor.requires_grad_()
+    attr,delta = ig.attribute(test_input_tensor, target=1,return_convergence_delta = True)
+    attr = attr.detach().numpy()
+# %%
+def visualize_importances(feature_names, importances, title = "Average Feature Importances", plot = True, axis_title="Features"):
+    print(title)
+    for i in range(len(feature_names)):
+        print(feature_names[i],":",importances[i])
+    x_pos = np.arange(len(feature_names))
+    if plot:
+        plt.figure(figsize=(12,6))
+        plt.bar(x_pos, importances,align='center')
+        plt.xticks(x_pos,feature_names,wrap=True)
+        plt.xlabel(axis_title)
+        plt.title(title)
+if MAIN:
+    visualize_importances(feature_names,np.mean(attr,axis=0))
+# %%
+if MAIN:
+    plt.hist(attr[:,2],100)
+    plt.title("Distribution of Sibsp Attribution Values")
+
+# %%
+if MAIN:
+    bin_means,bin_edges, _  = stats.binned_statistic(test_features[:,2],attr[:,2],statistic='mean',bins=6)
+    bin_count,_,_ = stats.binned_statistic(test_features[:,2],attr[:,2],statistic='count',bins=6)
+    bin_width = (bin_edges[1]-bin_edges[0])
+    bin_centers = bin_edges[1:] - bin_width/2
+    plt.scatter(bin_centers, bin_means,s=bin_count)
+    plt.xlabel("Average Sibsp Feature Value")
+    plt.ylabel("Average Attribution")
+# %%
