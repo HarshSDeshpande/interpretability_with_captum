@@ -126,3 +126,26 @@ if MAIN:
     plt.xlabel("Average Sibsp Feature Value")
     plt.ylabel("Average Attribution")
 # %%
+if MAIN:
+    cond = LayerConductance(net, net.sigmoid1)
+    cond_vals = cond.attribute(test_input_tensor, target =1)
+    cond_vals = cond_vals.detach().numpy()
+    visualize_importances(range(13),np.mean(cond_vals,axis=0),title="Average Neuron Importances in Sigmoid Layer",axis_title="Neurons")
+# %%
+if MAIN:
+    plt.hist(cond_vals[:,9],100)
+    plt.title("Neuron 9 Distribution")
+    plt.figure()
+    plt.hist(cond_vals[:,7],100)
+    plt.title("Neuron 7 Distribution")
+# %%
+if MAIN:
+    plt.hist(cond_vals[:,0],100)
+    plt.title("Neuron 0 Distribution")
+    plt.figure()
+    plt.hist(cond_vals[:,10],100)
+    plt.title("Neuron 10 Distribution")
+# %%
+if MAIN:
+    neuron_cond = NeuronConductance(net, net.sigmoid1)
+    
