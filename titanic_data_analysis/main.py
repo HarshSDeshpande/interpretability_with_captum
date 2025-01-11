@@ -44,7 +44,7 @@ if MAIN:
     test_features = np.array(data[test_indices],dtype=float)
     test_labels = labels[test_indices]
 # %%
-torch.manual_seed(42)
+torch.manual_seed(424242)
 
 class TitanicSimpleNNModel(nn.Module):
     def __init__(self):
@@ -80,4 +80,15 @@ if MAIN:
             print('Epoch {}/{} => Loss: {:.2f}'.format(epoch+1,num_epochs,loss.item()))
 
     torch.save(net.state_dict(),'titanic_model.pt')
+# %%
+if MAIN:
+    out_probs = net(input_tensor).detach().numpy()
+    out_classes = np.argmax(out_probs, axis=1)
+    print('Training Accuracy: {:.2f}'.format(np.mean(out_classes == train_labels)))
+# %%
+if MAIN:
+    test_input_tensor = torch.from_numpy(test_features).type(torch.FloatTensor)
+    out_probs = net(test_input_tensor).detach().numpy()
+    out_classes = np.argmax(out_probs, axis=1)
+    print('Test Accuracy: {:.2f}'.format(np.mean(out_classes == test_labels)))
 # %%
