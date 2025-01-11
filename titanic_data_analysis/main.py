@@ -148,4 +148,9 @@ if MAIN:
 # %%
 if MAIN:
     neuron_cond = NeuronConductance(net, net.sigmoid1)
-    
+    neuron_cond_vals_10 = neuron_cond.attribute(test_input_tensor,neuron_selector=10,target=1)
+    neuron_cond_vals_0 = neuron_cond.attribute(test_input_tensor,neuron_selector=0,target=1)
+    visualize_importances(feature_names, neuron_cond_vals_0.mean(dim=0).detach().numpy(),title="Average Feature Importances for Neuron 0")
+# %%
+if MAIN:
+    visualize_importances(feature_names, neuron_cond_vals_10.mean(dim=0).detach().numpy(),title="Average Feature Importances for Neuron 10")
